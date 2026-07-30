@@ -1,0 +1,1773 @@
+Below is a repository-ready specification. I have treated “near-instant” as an optimisation target to be demonstrated by benchmarks, not as a universal guarantee: classical simulation of general quantum circuits can grow exponentially, so the system must obtain its strongest results from supercompression, symbolic simplification, restricted quantum models, caching, determinisation and parallel execution.
+
+Classical Quantum Supercompression System
+
+GitHub Copilot Prolog Agent Program Requirements
+
+Working name: Quantum-MNN Supercompiler
+Suggested repository name: quantum-mnn-supercompiler
+Implementation language: SWI-Prolog
+Primary deliverable: PROGRAM_REQUIREMENTS.md
+Target platform: SWI-Prolog 9 or later on macOS, Linux and Windows/WSL
+Project type: Source-to-source compiler, symbolic optimiser, restricted quantum simulator and application showcase
+
+⸻
+
+1. Project Vision
+
+Develop a classical Prolog system that combines:
+
+1. MNN-style manual-neuronet supercompression;
+2. Spec to Algorithm, abbreviated S2A;
+3. Starlog;
+4. Loop2;
+5. PLOP;
+6. Detlog;
+7. Piglog2; and
+8. restricted classical simulation of quantum computation.
+
+The system shall accept:
+
+* input/output examples;
+* ordinary Prolog programs;
+* Starlog expressions;
+* MNN rules and tables;
+* optimisation declarations;
+* quantum circuits;
+* hybrid classical–quantum problem descriptions; and
+* application-specific constraints.
+
+It shall compile these descriptions into a highly compressed, deterministic and, where profitable, concurrent SWI-Prolog program.
+
+The central design principle is:
+
+Reduce the computation before accelerating its execution.
+
+The system shall seek near-instant responses by combining:
+
+* synthesis from examples;
+* specialisation;
+* formula discovery;
+* structural compression;
+* decision-tree compilation;
+* removal of unnecessary nondeterminism;
+* deterministic loops;
+* shared-computation splicing;
+* memoisation;
+* indexed lookup;
+* static concurrency;
+* restricted quantum simulation;
+* circuit simplification;
+* precomputation; and
+* reusable compiled solution kernels.
+
+The system shall not claim genuine quantum hardware performance. It shall simulate selected quantum-computing concepts on a classical computer and use those concepts as search, representation and optimisation models.
+
+⸻
+
+2. Scientific and Engineering Position
+
+The project shall distinguish three concepts.
+
+2.1 Classical supercompression
+
+Classical supercompression means reducing the size, branching factor, runtime or memory requirements of a computation by discovering a smaller equivalent representation.
+
+Examples include:
+
+* replacing recursion with a closed formula;
+* replacing search with an indexed table;
+* merging similar clauses into a decision tree;
+* compiling repeated outputs into templates;
+* calculating shared subgoals once;
+* converting choicepoints into finite choice packets;
+* reducing a circuit before simulating it;
+* specialising a general algorithm for a known domain; and
+* compiling frequently asked queries into direct answer paths.
+
+2.2 Classical quantum simulation
+
+The system shall implement selected quantum concepts using ordinary classical data structures and algorithms, including:
+
+* state vectors;
+* sparse state vectors;
+* stabilizer/tableau simulation;
+* reversible Boolean circuits;
+* phase and amplitude annotations;
+* quantum-inspired search ordering;
+* tensor-network-style decomposition;
+* circuit rewriting;
+* measurement simulation; and
+* hybrid symbolic–numeric execution.
+
+2.3 Near-instant computation
+
+“Near-instant” shall be an empirical target for suitable bounded applications.
+
+It shall mean that, after compilation or precomputation, a representative query completes within a configurable response target, such as:
+
+:- qmsc_target_response_time(50).   % milliseconds
+
+The compiler shall report whether the target is:
+
+* statically expected;
+* benchmark-confirmed;
+* not confirmed;
+* impossible under the current representation; or
+* dependent on precomputation.
+
+No universal near-instant guarantee shall be made.
+
+⸻
+
+3. Source-System Responsibilities
+
+3.1 S2A responsibility
+
+S2A shall provide example-driven algorithm synthesis.
+
+The existing S2A entry point processes named input and output specifications, supports character-breakdown modes, analyses recursive structures and separates examples according to output shape. Its implementation uses input/output records and derives structures from examples before constructing algorithms.
+
+The integrated system shall use S2A to:
+
+* infer candidate algorithms from examples;
+* recognise constants and changing values;
+* detect recurring structures;
+* group examples by input and output shape;
+* generate preliminary clauses;
+* construct decision trees;
+* propose recursive or iterative relations;
+* infer symbolic transformations;
+* generate candidate quantum-oracle predicates; and
+* create training-derived MNN rules.
+
+S2A output shall be treated as an initial candidate rather than automatically trusted final code.
+
+3.2 Starlog responsibility
+
+Starlog shall provide the preferred readable expression language for transformations and pipelines.
+
+Starlog supports result-first expressions of the form Result is function(Args), expands expressions into ordinary Prolog at load time, and provides operators for string concatenation, list append, atom concatenation and term conversion.
+
+The integrated system shall use Starlog for:
+
+* readable generated source;
+* nested functional transformations;
+* symbolic formula construction;
+* circuit-expression construction;
+* MNN value pipelines;
+* data-preparation pipelines;
+* query composition;
+* compile-time partial evaluation; and
+* representation of preserved symbolic expressions through no_eval/1.
+
+The system shall support at least:
+
+Result is function(Arguments).
+String is Left : Right.
+List is Left & Right.
+Atom is Left • Right.
+Term is ..=(Items).
+Items is =..(Term).
+Result is no_eval(Expression).
+Result is eval(Expression).
+
+3.3 Loop2 responsibility
+
+Loop2 shall convert supported finite nondeterministic patterns into deterministic recursion.
+
+Loop2 is designed as a minimal deterministic loop compiler. It eliminates supported findall/3 patterns, flattens nested findall and member, splices simple nondeterministic predicates, converts fact generators into list generators and emits explicit recursive loops.
+
+The integrated system shall use Loop2 to:
+
+* remove supported findall/3;
+* compile finite generators into lists;
+* turn generator traversal into tail-recursive loops;
+* flatten nested enumerations;
+* fuse map/filter/collect operations;
+* expose loops to later symbolic optimisation;
+* remove unnecessary intermediate result lists; and
+* prepare deterministic code for Detlog and PLOP.
+
+Loop2 transformations shall preserve, where applicable:
+
+* result contents;
+* result order;
+* deterministic single success; and
+* finite-generator semantics.
+
+3.4 PLOP responsibility
+
+PLOP shall perform whole-program symbolic superoptimisation.
+
+The existing PLOP optimiser includes bottom-up unfolding, memoisation, predicate-to-formula simplification, enumerator analysis, indexical optimisation, subterm-address indexing, recursive index-loop analysis, Gaussian elimination, list-formula discovery, shortcut splicing, shared-subgoal splicing, deterministic loop conversion, safety classification and optimisation reporting.
+
+The integrated system shall use PLOP to:
+
+* unfold small predicates;
+* combine chains of transformations;
+* eliminate duplicate calls;
+* discover closed forms;
+* perform algebraic simplification;
+* identify recurrent formulas;
+* derive direct index access;
+* introduce subterm-address indexes;
+* splice common subcomputations;
+* memoise pure expensive predicates;
+* replace general algorithms with specialised kernels;
+* simplify generated quantum circuits;
+* discover reusable circuit fragments; and
+* report every accepted and rejected optimisation.
+
+3.5 Detlog responsibility
+
+Detlog shall make nondeterminism explicit and compile safe cases into deterministic execution.
+
+Detlog currently provides choice packets, splice helpers, loop adapters, explicit decision helpers, source mapping and visible fallback when conversion safety is not established.
+
+The integrated system shall use Detlog to:
+
+* identify hidden choicepoints;
+* represent finite alternatives as cp/1;
+* combine alternatives through splice operations;
+* replace supported cuts with explicit control;
+* convert safe nondeterministic predicates;
+* preserve fallback paths for uncertain constructs;
+* enforce effect ordering;
+* generate deterministic intermediate code; and
+* verify converted modules for unintended operational cuts.
+
+Required runtime constructs include:
+
+cp(+Alternatives).
+member_cp(?Element, +ChoicePacket).
+splice(+ChoiceTerms, -Rows).
+splice_collect(+ChoiceTerms, -Rows).
+splice_each(+ChoiceTerms, :Goal).
+splice_first(+ChoiceTerms, -FirstRow).
+splice_select(+ChoiceTerms, :Condition, -SelectedRows).
+guard(:Goal).
+decision(+Alternatives, -Decision).
+if_commit(:Condition, :Then, :Else).
+first(:Generator, -Result).
+once_det(:Goal).
+loop_exit(+Reason).
+
+3.6 Piglog2 responsibility
+
+Piglog2 shall insert static concurrency after dependency and cost analysis.
+
+Piglog2 analyses ordinary Prolog source, estimates costs at conversion time, and inserts direct SWI-Prolog concurrency constructs into sufficiently expensive independent sections. Its generated code contains no runtime scheduling policy; decisions are made at conversion time.
+
+Its existing pipeline analyses flattened conjunctions, variable flow and transitive dependencies, estimates costs, finds independent groups and inserts concurrent/3.
+
+The integrated system shall use Piglog2 only after:
+
+* modes have been inferred or declared;
+* determinism has been established;
+* side effects have been classified;
+* shared variables have been analysed;
+* quantum-simulation kernels have been selected;
+* estimated work exceeds concurrency overhead; and
+* memory pressure is acceptable.
+
+Supported declarations shall include:
+
+:- qmsc_cost(PredicateIndicator, Milliseconds).
+:- qmsc_long(PredicateIndicator).
+:- qmsc_thread_safe(PredicateIndicator).
+:- qmsc_thread_unsafe(PredicateIndicator).
+:- qmsc_deterministic(PredicateIndicator).
+:- qmsc_memory_cost(PredicateIndicator, Bytes).
+:- qmsc_parallel_limit(PredicateIndicator, Threads).
+
+⸻
+
+4. Integrated Compiler Architecture
+
+The system shall be organised as a sequence of explicit intermediate representations.
+
+4.1 Pipeline
+
+Source or examples
+        |
+        v
+Parsing and source mapping
+        |
+        v
+S2A synthesis
+        |
+        v
+Starlog normalisation
+        |
+        v
+Typed symbolic intermediate representation
+        |
+        v
+MNN supercompression
+        |
+        v
+Loop2 deterministic-loop conversion
+        |
+        v
+PLOP symbolic optimisation
+        |
+        v
+Quantum/circuit optimisation
+        |
+        v
+Detlog determinisation and splice compilation
+        |
+        v
+Piglog2 static concurrency
+        |
+        v
+Verification and differential testing
+        |
+        v
+Generated SWI-Prolog kernel
+        |
+        v
+Benchmark and application showcase
+
+The implementation may repeat optimisation passes until a fixed point is reached.
+
+4.2 Required compiler phases
+
+1. Read source.
+2. Parse directives, clauses, examples and quantum terms.
+3. Retain source locations.
+4. Infer predicate modes.
+5. Infer determinism.
+6. Identify pure and effectful predicates.
+7. Run S2A where specifications are supplied.
+8. Expand Starlog into canonical operations.
+9. Construct the shared intermediate representation.
+10. Build the predicate dependency graph.
+11. Build the variable-flow graph.
+12. Identify repeated subterms and repeated calls.
+13. Build MNN rule tables.
+14. Rank compression opportunities.
+15. Convert finite nondeterminism into loops or choice packets.
+16. Apply PLOP symbolic optimisations.
+17. Construct or simplify quantum circuits.
+18. Select a classical simulation backend.
+19. Apply Detlog conversion.
+20. Estimate costs and memory usage.
+21. Apply Piglog2 concurrency.
+22. Verify semantic obligations.
+23. Generate source and reports.
+24. Run tests and benchmarks.
+25. Record whether the response-time target was achieved.
+
+⸻
+
+5. Common Intermediate Representation
+
+The project shall define a common IR rather than passing unstructured source text between all stages.
+
+5.1 Program representation
+
+program(
+    Module,
+    Declarations,
+    Predicates,
+    Specifications,
+    QuantumObjects,
+    Metadata
+).
+
+5.2 Predicate representation
+
+predicate(
+    Name/Arity,
+    Clauses,
+    Modes,
+    Determinism,
+    Purity,
+    Cost,
+    SourceLocation
+).
+
+5.3 Goal representation
+
+goal(Id, Operation, Inputs, Outputs, Properties).
+
+Properties may include:
+
+[
+    pure(true),
+    deterministic(true),
+    cost(4.2),
+    memory(1024),
+    thread_safe(true),
+    source(File, Line),
+    dependencies([GoalIds]),
+    representation(symbolic)
+]
+
+5.4 Choice representation
+
+choice_packet(Id, Alternatives, Cardinality, Ordering, Provenance).
+
+5.5 MNN representation
+
+mnn(
+    NetworkId,
+    Inputs,
+    Layers,
+    Outputs,
+    Constraints,
+    Confidence,
+    Provenance
+).
+
+A layer shall contain manually inspectable rules rather than opaque numerical weights:
+
+layer(
+    LayerId,
+    [
+        rule(Condition, Action, Score, Evidence),
+        rule(Condition2, Action2, Score2, Evidence2)
+    ]
+).
+
+5.6 Quantum representation
+
+quantum_circuit(
+    CircuitId,
+    Qubits,
+    ClassicalBits,
+    Gates,
+    Measurements,
+    Constraints,
+    BackendHint
+).
+
+Example:
+
+quantum_circuit(
+    bell,
+    2,
+    2,
+    [
+        gate(h, [0], []),
+        gate(cx, [0,1], [])
+    ],
+    [
+        measure(0,0),
+        measure(1,1)
+    ],
+    [],
+    auto
+).
+
+⸻
+
+6. MNN-Style Supercompression
+
+6.1 Definition
+
+For this project, an MNN is a manually inspectable network of:
+
+* rules;
+* decision nodes;
+* tables;
+* formulas;
+* invariants;
+* indexes;
+* constraints;
+* shortcuts;
+* reusable templates; and
+* selected actions.
+
+It shall not require statistical gradient training.
+
+6.2 Compression stages
+
+The compiler shall search for the following, in order:
+
+1. exact constant result;
+2. direct lookup table;
+3. indexed lookup table;
+4. repeated-answer cache;
+5. simple arithmetic formula;
+6. recurrence relation;
+7. finite-state transition;
+8. decision tree;
+9. shared template with variable slots;
+10. common prefix or suffix;
+11. subterm-address shortcut;
+12. reusable subgoal;
+13. reduced search space;
+14. bounded choice packet;
+15. deterministic loop;
+16. reversible circuit;
+17. restricted quantum circuit;
+18. parallel independent kernels;
+19. original algorithm fallback.
+
+6.3 Necessary dependency compression
+
+The compiler shall remove rules, values and branches that do not contribute to requested outputs.
+
+For a query:
+
+query(OutputVariables, Goal)
+
+the analyser shall compute a backward dependency slice from OutputVariables.
+
+Only goals that:
+
+* determine the output;
+* constrain a required intermediate value;
+* control an effect;
+* establish safety; or
+* affect success/failure
+
+shall remain in the specialised kernel.
+
+6.4 Hotlist compilation
+
+The system shall support domain hotlists:
+
+:- qmsc_hot_query(
+       academy_fee_projection/4,
+       frequency(high)
+   ).
+
+Frequently used queries may be:
+
+* specialised;
+* precomputed;
+* memoised;
+* compiled into direct decision trees;
+* translated into a reduced circuit;
+* loaded at startup; and
+* benchmarked separately.
+
+6.5 Supercompressed kernel
+
+The final output for a hot query should ideally take one of these forms:
+
+answer(Input, Output) :-
+    indexed_answer(Input, Output).
+answer(Input, Output) :-
+    decision_tree(Input, Output).
+answer(Input, Output) :-
+    Output is Formula.
+answer(Input, Output) :-
+    compressed_quantum_kernel(Input, Encoded),
+    decode_result(Encoded, Output).
+
+⸻
+
+7. Quantum Simulation Requirements
+
+7.1 Supported gate set
+
+The first release shall support:
+
+I, X, Y, Z
+H
+S, S-dagger
+T, T-dagger
+RX, RY, RZ
+CX/CNOT
+CZ
+SWAP
+Toffoli/CCX
+controlled phase
+measurement
+reset
+classical condition
+
+7.2 Simulation backends
+
+The system shall implement at least four backends.
+
+A. Reversible Boolean backend
+
+For circuits composed primarily of:
+
+* X;
+* CNOT;
+* Toffoli;
+* SWAP; and
+* classical reversible gates.
+
+Representation:
+
+reversible_state(BitVector).
+
+This backend shall be preferred where phases and superpositions are unnecessary.
+
+B. Stabilizer backend
+
+For Clifford-compatible circuits using gates such as:
+
+* H;
+* S;
+* CNOT; and
+* Pauli gates.
+
+Representation:
+
+stabilizer_tableau(XMatrix, ZMatrix, Phases).
+
+C. Sparse amplitude backend
+
+For circuits where only a small subset of basis states has nonzero amplitude.
+
+Representation:
+
+sparse_state([
+    BasisState-Amplitude,
+    ...
+]).
+
+D. Dense state-vector backend
+
+Representation:
+
+state_vector(QubitCount, Amplitudes).
+
+This backend shall be used only when the estimated state size is below configured limits.
+
+7.3 Optional future backend
+
+A tensor-network backend may be added after the first complete release.
+
+It shall not be required for the minimum viable implementation.
+
+7.4 Backend selection
+
+select_backend(Circuit, Analysis, Backend).
+
+Selection shall consider:
+
+* gate set;
+* qubit count;
+* entanglement estimate;
+* stabilizer compatibility;
+* sparsity;
+* circuit topology;
+* repeated subcircuits;
+* required measurements;
+* memory limit; and
+* target response time.
+
+7.5 Circuit simplification
+
+Required rewrite rules include:
+
+X · X                 → I
+H · H                 → I
+Z · Z                 → I
+S · S                 → Z
+T · T                 → S
+Gate · Inverse(Gate)  → I
+SWAP · SWAP           → I
+RZ(a) · RZ(b)         → RZ(a+b)
+Adjacent commuting gates may be reordered.
+Unmeasured irrelevant qubits may be removed.
+Constant-controlled gates may be simplified.
+Repeated subcircuits may become named kernels.
+
+7.6 Quantum-inspired optimisation
+
+The system may use quantum concepts without simulating amplitudes.
+
+Supported quantum-inspired methods may include:
+
+* superposition represented as a finite choice packet;
+* interference represented as cancellation of symbolic alternatives;
+* amplitude represented as a ranking or weight;
+* measurement represented as deterministic or pseudo-random selection;
+* Grover-inspired candidate ranking;
+* annealing-inspired local optimisation;
+* reversible constraint propagation; and
+* phase-tagged symbolic paths.
+
+These shall be clearly marked as quantum-inspired, not literal quantum simulation.
+
+7.7 Measurement policies
+
+Supported policies:
+
+measurement(exact_distribution).
+measurement(most_likely).
+measurement(sample(Seed)).
+measurement(samples(Count, Seed)).
+measurement(symbolic).
+
+Tests shall use seeded sampling when randomness is involved.
+
+⸻
+
+8. Hybrid Classical–Quantum Execution
+
+8.1 Hybrid plan
+
+hybrid_plan(
+    ClassicalPrefix,
+    QuantumKernel,
+    ClassicalSuffix,
+    Verification
+).
+
+The compiler shall:
+
+1. preprocess and compress inputs classically;
+2. reduce the active problem size;
+3. simulate only the smallest useful quantum kernel;
+4. decode results classically;
+5. verify constraints;
+6. use a classical fallback when required.
+
+8.2 Kernel extraction
+
+The compiler shall identify candidate quantum kernels only where:
+
+* the problem is bounded;
+* the data can be compactly encoded;
+* a supported circuit can express the operation;
+* simulation cost is estimable;
+* circuit simplification is useful; and
+* the quantum form is competitive with or educationally valuable relative to the classical form.
+
+8.3 Comparative execution
+
+For every showcase, the system shall support:
+
+compare_execution(
+    Problem,
+    [
+        original_prolog,
+        compressed_classical,
+        quantum_simulated,
+        hybrid
+    ],
+    Report
+).
+
+The report shall include:
+
+* compile time;
+* precomputation time;
+* query time;
+* total time;
+* memory;
+* result correctness;
+* generated-code size;
+* circuit depth;
+* gate count;
+* state representation;
+* concurrency used; and
+* speedup or slowdown.
+
+⸻
+
+9. Public API
+
+9.1 Compile a file
+
+qmsc_compile(+InputFile, +OutputFile).
+qmsc_compile(+InputFile, +OutputFile, +Options).
+
+9.2 Compile terms
+
+qmsc_compile_terms(+Terms, -GeneratedTerms, -Report).
+
+9.3 Run a query
+
+qmsc_run(+Source, :Goal).
+qmsc_run(+Source, :Goal, +Options, -Report).
+
+9.4 Compile and run
+
+qmsc_output_run(+Source, :Goal).
+
+9.5 Synthesize from examples
+
+qmsc_synthesise(
+    +PredicateName,
+    +Examples,
+    +Options,
+    -Program,
+    -Report
+).
+
+Example format:
+
+[
+    [[input, [[a,[1]], [b,[2]]]],
+     [output,[[result,[3]]]]],
+    [[input, [[a,[4]], [b,[5]]]],
+     [output,[[result,[9]]]]]
+]
+
+9.6 Compile a quantum circuit
+
+qmsc_compile_circuit(+Circuit, -Kernel, -Report).
+
+9.7 Simulate a circuit
+
+qmsc_simulate(+Circuit, +InitialState, +Options, -Result).
+
+9.8 Optimise a circuit
+
+qmsc_optimise_circuit(
+    +Circuit,
+    -OptimisedCircuit,
+    -RewriteTrace
+).
+
+9.9 Explain an optimisation
+
+qmsc_explain(+Source, +PredicateIndicator, -Explanation).
+
+9.10 Benchmark
+
+qmsc_benchmark(+Scenario, -Report).
+qmsc_benchmark_suite(+Suite, -Reports).
+
+9.11 Showcase
+
+qmsc_showcase.
+qmsc_showcase(+Application).
+
+⸻
+
+10. Options
+
+Required compiler options:
+
+[
+    s2a(true),
+    starlog(true),
+    mnn_compression(true),
+    loop2(true),
+    plop(true),
+    quantum(true),
+    detlog(true),
+    piglog2(true),
+    target_ms(50),
+    compile_budget_ms(60000),
+    max_qubits(24),
+    dense_max_qubits(20),
+    sparse_state_limit(100000),
+    memory_limit_mb(2048),
+    max_threads(4),
+    backend(auto),
+    verify(differential),
+    fallback(true),
+    trace(summary),
+    emit_ir(false),
+    emit_code(true),
+    benchmark(true)
+]
+
+Trace levels:
+
+trace(none).
+trace(summary).
+trace(stages).
+trace(full).
+
+Verification levels:
+
+verify(none).
+verify(types).
+verify(static).
+verify(samples).
+verify(differential).
+verify(exhaustive_bounded).
+
+⸻
+
+11. Safety and Semantic Preservation
+
+11.1 Transformation classes
+
+Every transformation shall be classified as:
+
+proved.
+verified_bounded.
+tested.
+claimed.
+heuristic.
+unsafe.
+rejected.
+
+11.2 Fallback
+
+When equivalence is not established, the compiler shall:
+
+* retain the original predicate;
+* generate a visible fallback wrapper;
+* explain the reason;
+* avoid labelling the result as fully converted; and
+* continue compiling safe parts where possible.
+
+11.3 Effects
+
+The analyser shall recognise:
+
+* console I/O;
+* file I/O;
+* network I/O;
+* dynamic database changes;
+* exceptions;
+* random-number generation;
+* time;
+* sensors;
+* actuators;
+* global mutable state; and
+* foreign predicates.
+
+Effectful operations shall not be:
+
+* duplicated;
+* reordered;
+* memoised without permission;
+* speculatively executed;
+* moved across a commit point; or
+* executed concurrently unless explicitly safe.
+
+11.4 Quantum simulation limits
+
+The compiler shall reject or fall back when:
+
+* a dense state vector exceeds memory limits;
+* an unsupported gate is encountered;
+* numeric precision is inadequate;
+* symbolic amplitudes grow beyond limits;
+* a sampling request lacks a seed in test mode;
+* a circuit includes unsupported dynamic behaviour; or
+* the estimated runtime exceeds the configured budget.
+
+⸻
+
+12. Optimisation Fixed-Point Strategy
+
+The optimiser shall repeat compatible stages until:
+
+* no transformation changes the IR;
+* the maximum pass count is reached;
+* compile-time budget is exhausted; or
+* the cost estimate stops improving.
+
+Suggested pass order:
+
+1. Normalise
+2. Specialise
+3. Slice dependencies
+4. S2A merge
+5. Starlog simplify
+6. MNN compress
+7. Loop2 convert
+8. PLOP unfold
+9. PLOP formula discovery
+10. PLOP index
+11. PLOP splice
+12. Circuit extract
+13. Circuit simplify
+14. Detlog convert
+15. Dead-code elimination
+16. Piglog2 parallelise
+17. Verify
+18. Repeat where profitable
+
+The system shall prevent optimisation oscillation by hashing each IR state.
+
+⸻
+
+13. Cost Model
+
+The project shall define:
+
+estimated_cost(
+    Time,
+    Memory,
+    Branches,
+    Allocations,
+    Synchronisation,
+    Confidence
+).
+
+The cost model shall consider:
+
+* predicate-call count;
+* loop iterations;
+* choice cardinality;
+* recursion depth;
+* term sizes;
+* index availability;
+* memoisation hit rate;
+* formula complexity;
+* circuit gate count;
+* circuit depth;
+* state-vector size;
+* sparse-state occupancy;
+* thread-creation overhead; and
+* data-transfer overhead.
+
+The system shall compare:
+
+Original estimated cost
+Compressed classical estimated cost
+Quantum-simulation estimated cost
+Hybrid estimated cost
+
+It shall select the lowest-cost verified plan, not automatically the most “quantum” plan.
+
+⸻
+
+14. Reports
+
+Each compilation shall generate a structured report.
+
+report(
+    Source,
+    Status,
+    Stages,
+    Transformations,
+    RejectedTransformations,
+    Verification,
+    CostBefore,
+    CostAfter,
+    Benchmarks,
+    Warnings
+).
+
+Human-readable reports shall state:
+
+* what was synthesised;
+* what was simplified;
+* what was memoised;
+* what was indexed;
+* what nondeterminism was removed;
+* which loops were generated;
+* which quantum backend was selected;
+* which circuit rewrites occurred;
+* which goals were parallelised;
+* which predicates fell back;
+* whether correctness was verified;
+* whether the target latency was reached; and
+* whether precomputation time was excluded from query latency.
+
+⸻
+
+15. Showcase Applications
+
+The repository shall contain a showcase that demonstrates both successful and unsuccessful uses.
+
+15.1 Boolean constraint solving
+
+Input:
+
+* bounded Boolean variables;
+* logical constraints;
+* requested satisfying assignments.
+
+Implementations:
+
+* ordinary Prolog search;
+* Detlog choice packets;
+* MNN decision rules;
+* reversible circuit;
+* quantum-inspired amplitude ranking.
+
+Metrics:
+
+* candidate count;
+* eliminated candidates;
+* circuit gates;
+* query time;
+* memory.
+
+15.2 Small travelling-salesperson problem
+
+Input:
+
+* 5–10 cities;
+* distance matrix;
+* route constraints.
+
+Methods:
+
+* exhaustive Prolog;
+* branch-and-bound;
+* PLOP memoisation;
+* MNN constraint pruning;
+* Piglog2 parallel route partitions;
+* quantum-inspired amplitude amplification simulation.
+
+The report must disclose where classical compression provides the real speedup.
+
+15.3 Symbolic algebra
+
+Examples:
+
+* arithmetic-expression simplification;
+* recurrence-to-formula conversion;
+* Gaussian equation solving;
+* common-subexpression elimination.
+
+This showcase shall demonstrate PLOP formula discovery and Starlog expression syntax.
+
+15.4 Academy scheduling
+
+Inputs:
+
+* teachers;
+* classes;
+* rooms;
+* times;
+* preferences;
+* hard constraints.
+
+Outputs:
+
+* feasible schedules;
+* ranked schedules;
+* explanation of constraint satisfaction.
+
+The compiler shall:
+
+* generate a solver from examples or declarations;
+* compress repeated constraints;
+* create deterministic indexes;
+* parallelise independent score calculations;
+* optionally use a quantum-inspired search order.
+
+15.5 Philosophical argument mapping
+
+Inputs:
+
+* propositions;
+* supports;
+* objections;
+* incompatibilities;
+* confidence annotations.
+
+Outputs:
+
+* consistent argument sets;
+* dependency paths;
+* minimal supporting premises;
+* conflicting premise groups.
+
+This shall demonstrate manual-neuronet rules, dependency slicing and inspectable reasoning rather than opaque learning.
+
+15.6 Music pattern generation
+
+Inputs:
+
+* scale;
+* chord progression;
+* rhythm constraints;
+* melodic examples.
+
+Outputs:
+
+* short candidate phrases;
+* compressed style rules;
+* variations.
+
+The application shall use:
+
+* S2A for pattern induction;
+* Starlog for transformation pipelines;
+* MNN rules for style constraints;
+* Detlog for bounded alternatives;
+* Piglog2 for concurrent candidate evaluation.
+
+15.7 Search and database query planning
+
+Input:
+
+* facts or records;
+* query;
+* available indexes;
+* cost declarations.
+
+Outputs:
+
+* original query plan;
+* compressed/indexed plan;
+* concurrent plan;
+* benchmark comparison.
+
+15.8 Quantum circuit simplification
+
+Input:
+
+* deliberately redundant circuits.
+
+Output:
+
+* reduced gate count;
+* reduced depth;
+* selected simulator;
+* equivalent measurement distribution.
+
+15.9 Grover-search demonstration
+
+Implement a small, educational simulation for bounded search spaces.
+
+The showcase shall explicitly report:
+
+* oracle construction;
+* diffusion steps;
+* amplitude evolution;
+* classical simulation cost;
+* direct classical-search cost; and
+* why the simulation does not automatically provide a practical classical speedup.
+
+15.10 Near-instant hot-query demonstration
+
+Select a realistic bounded application and demonstrate:
+
+1. expensive initial synthesis;
+2. supercompression;
+3. kernel generation;
+4. cache warming;
+5. repeated query latency;
+6. correctness checks.
+
+The report shall separately show:
+
+Cold total time
+Compile time
+Precompute time
+Warm query time
+Amortised time
+
+⸻
+
+16. Benchmark Requirements
+
+16.1 Baselines
+
+Each benchmark shall compare:
+
+1. original Prolog;
+2. S2A-generated Prolog;
+3. Starlog-normalised code;
+4. Loop2 code;
+5. PLOP-optimised code;
+6. Detlog code;
+7. Piglog2 code;
+8. simulated quantum implementation;
+9. complete hybrid implementation.
+
+16.2 Measurements
+
+Measure:
+
+* wall-clock time;
+* CPU time;
+* inferences;
+* global stack use;
+* local stack use;
+* trail use;
+* allocated bytes;
+* generated source size;
+* compile time;
+* preprocessing time;
+* cache construction time;
+* cold-query latency;
+* warm-query latency;
+* throughput;
+* quantum gate count;
+* circuit depth;
+* simulated-state size;
+* thread count; and
+* correctness.
+
+16.3 Benchmark discipline
+
+* Run warm-up iterations.
+* Use multiple measured iterations.
+* Report median, mean, minimum and maximum.
+* Record machine and SWI-Prolog version.
+* Use seeded randomness.
+* Prevent dead-code elimination from invalidating tests.
+* Verify every result.
+* Include workloads where optimisation makes performance worse.
+* Do not combine compile time with query time without labelling it.
+* Do not describe speedup as quantum speedup when it comes from classical preprocessing.
+
+⸻
+
+17. Testing Requirements
+
+17.1 Unit tests
+
+Tests shall cover:
+
+* parsers;
+* source mapping;
+* S2A adapters;
+* Starlog expansion;
+* mode inference;
+* determinism inference;
+* dependency graphs;
+* MNN rules;
+* Loop2 conversion;
+* PLOP transformations;
+* choice packets;
+* splice operations;
+* cut conversion;
+* cost estimation;
+* concurrency grouping;
+* quantum gates;
+* backend selection;
+* circuit rewriting;
+* measurement;
+* report generation; and
+* fallback behaviour.
+
+17.2 Differential tests
+
+For bounded pure programs:
+
+original_answers(Goal, Answers1),
+compiled_answers(Goal, Answers2),
+assertion(Answers1 == Answers2).
+
+Where answer order is declared significant, exact order shall be tested.
+
+Where only set equality is promised, the report shall state this explicitly.
+
+17.3 Property tests
+
+Required properties include:
+
+* applying a gate followed by its inverse restores the state;
+* simplification preserves measurement distribution;
+* deterministic conversion produces at most one top-level success;
+* memoisation does not alter pure predicate results;
+* concurrency does not introduce shared-variable races;
+* removed goals cannot affect outputs;
+* compiled lookup answers match source algorithms;
+* backend selection respects memory limits; and
+* repeated fixed-point optimisation is idempotent.
+
+17.4 Test command
+
+The repository shall provide:
+
+swipl -q -s test/run_tests.pl -g run_tests -t halt
+
+17.5 Benchmark command
+
+swipl -q -s benchmark/run_benchmarks.pl -g run_benchmarks -t halt
+
+17.6 Showcase command
+
+swipl -q -s showcase/run_showcase.pl -g run_showcase -t halt
+
+⸻
+
+18. Repository Structure
+
+quantum-mnn-supercompiler/
+├── PROGRAM_REQUIREMENTS.md
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── ROADMAP.md
+├── qmsc.pl
+│
+├── prolog/
+│   ├── qmsc_api.pl
+│   ├── qmsc_reader.pl
+│   ├── qmsc_parser.pl
+│   ├── qmsc_ir.pl
+│   ├── qmsc_source_map.pl
+│   ├── qmsc_modes.pl
+│   ├── qmsc_determinism.pl
+│   ├── qmsc_effects.pl
+│   ├── qmsc_dependencies.pl
+│   ├── qmsc_cost.pl
+│   ├── qmsc_pipeline.pl
+│   ├── qmsc_report.pl
+│   ├── qmsc_verify.pl
+│   └── qmsc_loader.pl
+│
+├── prolog/adapters/
+│   ├── s2a_adapter.pl
+│   ├── starlog_adapter.pl
+│   ├── loop2_adapter.pl
+│   ├── plop_adapter.pl
+│   ├── detlog_adapter.pl
+│   └── piglog2_adapter.pl
+│
+├── prolog/mnn/
+│   ├── mnn_ir.pl
+│   ├── mnn_builder.pl
+│   ├── mnn_rules.pl
+│   ├── mnn_dependency_slice.pl
+│   ├── mnn_decision_tree.pl
+│   ├── mnn_tables.pl
+│   ├── mnn_templates.pl
+│   ├── mnn_hotlist.pl
+│   └── mnn_compress.pl
+│
+├── prolog/quantum/
+│   ├── quantum_ir.pl
+│   ├── quantum_gates.pl
+│   ├── quantum_circuit.pl
+│   ├── quantum_rewrite.pl
+│   ├── quantum_backend.pl
+│   ├── reversible_backend.pl
+│   ├── stabilizer_backend.pl
+│   ├── sparse_backend.pl
+│   ├── state_vector_backend.pl
+│   ├── quantum_measure.pl
+│   ├── quantum_oracle.pl
+│   ├── quantum_inspired.pl
+│   └── hybrid_planner.pl
+│
+├── test/
+│   ├── run_tests.pl
+│   ├── test_ir.pl
+│   ├── test_adapters.pl
+│   ├── test_mnn.pl
+│   ├── test_loop_conversion.pl
+│   ├── test_determinism.pl
+│   ├── test_quantum_gates.pl
+│   ├── test_quantum_rewrite.pl
+│   ├── test_backends.pl
+│   ├── test_hybrid.pl
+│   ├── test_concurrency.pl
+│   └── fixtures/
+│
+├── benchmark/
+│   ├── run_benchmarks.pl
+│   ├── benchmark_utils.pl
+│   ├── benchmark_classical.pl
+│   ├── benchmark_quantum.pl
+│   ├── benchmark_hybrid.pl
+│   └── results/
+│
+├── showcase/
+│   ├── run_showcase.pl
+│   ├── boolean_constraints.pl
+│   ├── travelling_salesperson.pl
+│   ├── symbolic_algebra.pl
+│   ├── academy_scheduler.pl
+│   ├── argument_mapper.pl
+│   ├── music_patterns.pl
+│   ├── query_planner.pl
+│   ├── circuit_simplifier.pl
+│   ├── grover_demo.pl
+│   └── hot_query_demo.pl
+│
+└── docs/
+    ├── ARCHITECTURE.md
+    ├── IR.md
+    ├── MNN_SUPERCOMPRESSION.md
+    ├── QUANTUM_SIMULATION.md
+    ├── SAFETY.md
+    ├── BENCHMARKING.md
+    ├── SHOWCASE.md
+    └── LIMITATIONS.md
+
+⸻
+
+19. Implementation Stages for GitHub Copilot Agent
+
+The GitHub Copilot coding agent shall implement the project in stages.
+
+Stage 1 — Repository foundation
+
+Implement:
+
+* directory structure;
+* module-loading skeleton;
+* public API;
+* options;
+* test runner;
+* benchmark runner;
+* progress document.
+
+Completion criteria:
+
+* all modules load;
+* placeholder tests pass;
+* no undefined exported predicates.
+
+Stage 2 — Parser and shared IR
+
+Implement:
+
+* source reader;
+* term parser;
+* source locations;
+* program IR;
+* predicate IR;
+* goal IR;
+* pretty printer.
+
+Completion criteria:
+
+* parse/print round trip;
+* source locations retained;
+* comments and unsupported directives handled safely.
+
+Stage 3 — Source-system adapters
+
+Implement adapters for:
+
+* S2A;
+* Starlog;
+* Loop2;
+* PLOP;
+* Detlog;
+* Piglog2.
+
+Each adapter shall:
+
+* detect dependency availability;
+* expose a stable internal API;
+* translate to and from the common IR;
+* provide diagnostics;
+* support disabled mode;
+* fail visibly rather than silently.
+
+Stage 4 — Static analysis
+
+Implement:
+
+* mode inference;
+* determinism inference;
+* purity;
+* effect classification;
+* variable-flow analysis;
+* dependency graphs;
+* cardinality estimates.
+
+Stage 5 — MNN supercompression
+
+Implement:
+
+* backward dependency slicing;
+* constant detection;
+* lookup tables;
+* decision trees;
+* template extraction;
+* common-prefix factoring;
+* hot-query specialisation;
+* rule explanations.
+
+Stage 6 — Deterministic loop and PLOP passes
+
+Implement:
+
+* Loop2 conversion;
+* loop fusion;
+* memoisation;
+* unfolding;
+* formula discovery;
+* indexing;
+* shortcut splicing;
+* fixed-point driver.
+
+Stage 7 — Quantum IR and core gates
+
+Implement:
+
+* circuit parser;
+* gate validation;
+* reversible backend;
+* dense state-vector backend;
+* deterministic measurement policies;
+* seeded sampling.
+
+Stage 8 — Restricted efficient backends
+
+Implement:
+
+* stabilizer backend;
+* sparse-state backend;
+* backend-selection analysis;
+* memory safeguards.
+
+Stage 9 — Circuit supercompression
+
+Implement:
+
+* inverse cancellation;
+* rotation merging;
+* commuting-gate rewrites;
+* dead-qubit elimination;
+* repeated-subcircuit extraction;
+* circuit reports.
+
+Stage 10 — Hybrid planner
+
+Implement:
+
+* classical prefix extraction;
+* quantum-kernel extraction;
+* classical suffix;
+* backend comparison;
+* fallback plans;
+* cost-based plan selection.
+
+Stage 11 — Detlog integration
+
+Implement:
+
+* choice packets;
+* splice compilation;
+* explicit decision constructs;
+* cut classification;
+* deterministic verification;
+* visible fallback.
+
+Stage 12 — Piglog2 integration
+
+Implement:
+
+* final dependency analysis;
+* cost declarations;
+* concurrency profitability;
+* memory-aware grouping;
+* thread-safety checks;
+* direct concurrent/3 generation.
+
+Stage 13 — Verification
+
+Implement:
+
+* static obligations;
+* differential tests;
+* bounded exhaustive verification;
+* quantum-distribution comparison;
+* transformation classifications;
+* provenance traces.
+
+Stage 14 — Showcase applications
+
+Implement all required showcases with:
+
+* original version;
+* compressed version;
+* simulated quantum version where applicable;
+* hybrid version;
+* benchmark;
+* explanation.
+
+Stage 15 — Documentation and final review
+
+Complete:
+
+* README;
+* architecture;
+* IR specification;
+* MNN explanation;
+* quantum limitations;
+* benchmark methodology;
+* examples;
+* API reference;
+* troubleshooting;
+* final progress report.
+
+⸻
+
+20. Agent Working Rules
+
+For every stage, the coding agent shall:
+
+1. inspect existing code before editing;
+2. implement the smallest complete vertical slice;
+3. add unit tests;
+4. add integration tests where applicable;
+5. run the full test suite;
+6. fix failures without weakening tests;
+7. update documentation;
+8. update PROGRESS.md;
+9. perform a self-review;
+10. record unresolved limitations;
+11. avoid changing semantics merely to pass tests;
+12. preserve public APIs unless an intentional migration is documented;
+13. use ordinary SWI-Prolog modules;
+14. avoid hidden global state where possible;
+15. ensure generated predicate names cannot collide;
+16. keep generated code readable;
+17. retain source provenance;
+18. make all heuristic results explicit;
+19. never represent an unverified optimisation as proved;
+20. continue until the current stage’s tests pass.
+
+⸻
+
+21. Acceptance Criteria
+
+The first complete release is accepted when:
+
+* all required modules exist;
+* all six source-system adapters operate or provide explicit dependency diagnostics;
+* S2A examples can generate a candidate predicate;
+* Starlog expressions can enter the pipeline;
+* supported findall/member patterns become deterministic loops;
+* PLOP-style symbolic optimisation is demonstrated;
+* Detlog choice packets and splice operations work;
+* Piglog2 inserts concurrency only into safe independent groups;
+* at least four quantum backends are implemented;
+* circuit simplification preserves bounded test results;
+* the hybrid planner selects between classical and simulated-quantum plans;
+* all ten showcases run;
+* comparative benchmarks are generated;
+* fallbacks are visible;
+* every transformation has a provenance record;
+* generated code is valid SWI-Prolog;
+* the test suite passes; and
+* at least one bounded, repeatedly queried showcase reaches its configured warm-query latency target.
+
+⸻
+
+22. Non-Goals for the First Release
+
+The first release shall not attempt:
+
+* universal simulation of large quantum computers;
+* claims of physical quantum advantage;
+* communication with other dimensions or universes;
+* arbitrary unbounded quantum circuits;
+* full WAM replacement;
+* complete preservation of all unrestricted Prolog control behaviour;
+* transparent parallelisation of side effects;
+* distributed computing;
+* GPU kernels;
+* real quantum-hardware execution;
+* automatic proof of all program equivalences;
+* opaque neural-network training; or
+* universal near-instant computation.
+
+⸻
+
+23. Final Principle
+
+The completed system shall demonstrate that a classical computer can sometimes approach near-instant application-level responses by compiling a broad computation into a much smaller one.
+
+Its preferred progression shall be:
+
+examples
+→ algorithm
+→ readable transformations
+→ deterministic loops
+→ symbolic formulas and indexes
+→ compressed choices
+→ reduced quantum or quantum-inspired kernel
+→ safe concurrency
+→ verified specialised answer path
+
+The system’s primary achievement shall not be pretending that a classical machine has become a quantum computer. Its achievement shall be showing how synthesis, symbolic reasoning, manual-neuronet compression, deterministic execution, restricted quantum simulation and static parallelism can cooperate to remove as much unnecessary computation as possible.
+
+This version is suitable as the initial PROGRAM_REQUIREMENTS.md; the most important implementation decision is the shared IR, because it prevents the seven transformation systems from becoming a fragile chain of text converters.
