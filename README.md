@@ -8,26 +8,40 @@ Quantum-MNN Supercompiler is a SWI-Prolog source-to-source compiler and optimisa
 - hybrid classical/quantum planning,
 - verification, benchmarking, and showcase runners.
 
-## Public API
+## Features
 
-The main API is exported from `qmsc.pl` via `prolog/qmsc_api.pl`:
+The system includes a source reader and parser with source metadata, a shared IR,
+six adapter surfaces, static analyses, MNN-style compression passes, quantum
+circuit compilation and rewrite passes, bounded backend selection, hybrid
+planning, verification/fallback reports, benchmarks, and ten showcase
+applications. See [Feature guide](docs/FEATURES.md) for a feature-by-feature
+overview, module references, current boundaries, and a status of remaining work.
 
-- `qmsc_compile/2`, `qmsc_compile/3`
-- `qmsc_compile_terms/3`
-- `qmsc_run/2`, `qmsc_run/4`
-- `qmsc_output_run/2`
-- `qmsc_synthesise/5`
-- `qmsc_compile_circuit/3`
-- `qmsc_simulate/4`
-- `qmsc_optimise_circuit/3`
-- `qmsc_explain/3`
-- `qmsc_benchmark/2`, `qmsc_benchmark_suite/2`
-- `qmsc_showcase/0`, `qmsc_showcase/1`
+The public predicates exported by `qmsc.pl` are documented in the
+[API reference](docs/API_REFERENCE.md).
 
-## Commands
+## Requirements and tests
+
+Install SWI-Prolog (the repository is tested with its `swipl` command), then
+run the complete PlUnit suite:
 
 ```bash
 swipl -q -s test/run_tests.pl -g run_tests -t halt
+```
+
+Individual test groups can be run by replacing `run_tests` with
+`run_tests([ir])`, using one of: `ir`, `adapters`, `mnn`, `loop_conversion`,
+`determinism`, `quantum_gates`, `quantum_rewrite`, `backends`, `hybrid`, or
+`concurrency`.
+
+The other executable checks are:
+
+```bash
 swipl -q -s benchmark/run_benchmarks.pl -g run_benchmarks -t halt
 swipl -q -s showcase/run_showcase.pl -g run_showcase -t halt
+swipl -q -s prolog/qmsc_loader.pl -g load_qmsc_modules -t halt
 ```
+
+See [Testing and benchmarks](docs/BENCHMARKING.md) and
+[Troubleshooting](docs/TROUBLESHOOTING.md) for further guidance. No build
+system or third-party Prolog libraries are required beyond SWI-Prolog.
