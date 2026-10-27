@@ -1,6 +1,6 @@
 # Progress
 
-## Completed
+## Stage coverage
 
 - Stage 1: repository foundation, module loading, API/options, test/benchmark/showcase runners.
 - Stage 2: source reading, parsing, source-location retention, shared IR and pretty-printer support.
@@ -9,7 +9,7 @@
 - Stage 5: MNN compression scaffolding and explanations.
 - Stage 6: deterministic loop and symbolic optimisation entry points.
 - Stage 7: quantum IR, gate layer, circuit compilation and deterministic measurement support.
-- Stage 8: restricted backend selection with memory-aware safeguards.
+- Stage 8: restricted backend selection with qubit-threshold safeguards; memory budgets are not yet enforced.
 - Stage 9: circuit rewrite passes and traces.
 - Stage 10: hybrid planner with fallback reporting.
 - Stage 11: Detlog packet/splice support.
@@ -22,3 +22,6 @@
 
 - Several advanced transformations are represented by conservative first-cut implementations.
 - Quantum simulation is intentionally restricted and lightweight for first release scaffolding.
+- The non-reversible quantum backends are tagged result placeholders; the memory limit option is not enforced.
+- Verification currently checks term equality rather than executing a general differential or bounded-equivalence check.
+- The broader remaining feature list and implementation boundaries are maintained in [docs/FEATURES.md](docs/FEATURES.md).

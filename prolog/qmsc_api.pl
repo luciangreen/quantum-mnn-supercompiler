@@ -81,7 +81,7 @@ qmsc_simulate(Circuit, InitialState, Options, Result) :-
     run_backend(Backend, Circuit, InitialState, Sim),
     measurement_policy(Options, Policy),
     measurement_seed(Options, Seed),
-    measure_state(InitialState, Policy, Seed, Measurement),
+    measure_state(Sim, Policy, Seed, Measurement),
     Result = simulation{
         backend: Backend,
         backend_report: BackendReport,
